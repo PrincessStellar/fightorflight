@@ -390,24 +390,25 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
                 addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 0));
             }
         }
-        if (damageSource.is(DamageTypes.MOB_ATTACK) && damageAmount > 0) {
-            PokemonEntity pokemonEntity = (PokemonEntity) (Object) this;
-            var entity = damageSource.getEntity();
-            if (entity instanceof LivingEntity livingEntity) {
-                if (FOFHeldItemManager.canUse(pokemonEntity, CobblemonItems.ROCKY_HELMET)) {
-                    entity.hurt(damageSources().thorns(pokemonEntity), livingEntity.getMaxHealth() / 6);
+        var entity = damageSource.getEntity();
+        if (damageAmount > 0 && entity instanceof LivingEntity livingEntity) {
+            if (livingEntity instanceof PokemonEntity attackerPokemon) {
+                if (attackerPokemon.getPokemon().isPlayerOwned()) {
+                    Pokemon pokemon = attackerPokemon.getPokemon();
+                    HURT_BY_POKEMON_FOF.add(pokemon);
+                    LAST_HURT_BY_POKEMON_FOF = pokemon;
                 }
-                if (PokemonUtils.abilityIs(pokemonEntity, "roughskin") || PokemonUtils.abilityIs(pokemonEntity, "ironbarbs")) {
-                    entity.hurt(damageSources().thorns(pokemonEntity), livingEntity.getMaxHealth() / 8);
-                }
-                if (livingEntity instanceof PokemonEntity attackerPokemon) {
-                    if (attackerPokemon.getPokemon().isPlayerOwned()) {
-                        Pokemon pokemon = attackerPokemon.getPokemon();
-                        HURT_BY_POKEMON_FOF.add(pokemon);
-                        LAST_HURT_BY_POKEMON_FOF = pokemon;
+                if (damageSource.is(DamageTypes.MOB_ATTACK)) {
+                    PokemonEntity pokemonEntity = (PokemonEntity) (Object) this;
+                    if (FOFHeldItemManager.canUse(pokemonEntity, CobblemonItems.ROCKY_HELMET)) {
+                        entity.hurt(damageSources().thorns(pokemonEntity), livingEntity.getMaxHealth() / 6);
+                    }
+                    if (PokemonUtils.abilityIs(pokemonEntity, "roughskin") || PokemonUtils.abilityIs(pokemonEntity, "ironbarbs")) {
+                        entity.hurt(damageSources().thorns(pokemonEntity), livingEntity.getMaxHealth() / 8);
                     }
                 }
             }
+
         }
     }
 
