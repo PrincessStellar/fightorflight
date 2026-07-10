@@ -1,6 +1,7 @@
 # V0.10.9:
 ### Bug fixes:
 * Fixed the log spam
+* Fix the bug that Pokemon can only gain exp from melee attack.
 
 # V0.10.8:
 ### New Features:
