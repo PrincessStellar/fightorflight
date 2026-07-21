@@ -4,6 +4,13 @@
 ### 你可能在乎的功能：
 * 宝可梦的嘲讽机制
 ### 需要[Architectury](https://modrinth.com/mod/architectury-api) !!!
+# FAQ
+## 我的宝可梦不能攻击！
+* 宝可梦等级应该大于等于minimum_attack_level(config/fightorflight.json5)。有些整合包(*Cobbleverse!!!*)会把这个值改得更高。
+* 在肩上的宝可梦不会攻击，玩家正在骑乘的可以。
+* do_pokemon_defend_owner需要为true.
+* 宝可梦会尝试使用技能栏的第一个技能来攻击。需要使用物攻/特攻技能。
+* 有些config也跟这个问题有关
 # 介绍
 自己录的一个简单的演示视频：https://www.bilibili.com/video/BV1yac2ehEEH  
 宝可杖使用说明：https://www.bilibili.com/video/BV16yfiYREuW/

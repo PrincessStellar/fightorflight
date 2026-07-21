@@ -7,6 +7,7 @@ import me.rufia.fightorflight.item.component.PokeStaffComponent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
@@ -149,5 +150,9 @@ public class FOFUtils {
                 opt.ifPresent(activity -> CobblemonFightOrFlight.LOGGER.info("[{}] current activity:{}", PokemonUtils.getPokemonName(pokemonEntity), activity.getName()));
             }
         }
+    }
+
+    public static boolean isPeaceful(LivingEntity entity) {
+        return entity.getCommandSenderWorld().getCurrentDifficultyAt(entity.blockPosition()).getDifficulty() == Difficulty.PEACEFUL;
     }
 }

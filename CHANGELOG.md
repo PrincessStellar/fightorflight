@@ -1,3 +1,12 @@
+# V0.11.0:
+### New Features:
+
+### TODO list:
+* Custom type effectiveness: Use a json file to give an entity specific weaknesses and resistances. For modpack creators & datapack creators to create more interactions with the mobs from the other mods.
+* Adjust the way the Pokemon uses move, maybe I will make the Pokemon stop for a moment to use the move.(Like in ZA) It might be added to the status moves first because the mobs from Minecraft can attack while moving, making the Pokemon totally dumb is not fun.
+* Add a config to allow the player to use Pokemon to attack in Peaceful difficulty.(This is prohibited by Cobblemon, I need to add a mixin)
+* Adjust the normal range attack projectile, I guess I need to slightly increase its height.
+
 # V0.10.9:
 ### Bug fixes:
 * Fixed the log spam

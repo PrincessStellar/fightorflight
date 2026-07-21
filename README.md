@@ -3,6 +3,13 @@ This version is no longer server-side only. Try CobbleGuard if you want a server
 ### Unfinished features that you might care about:
 * Taunt for Pokemon.
 ### [Architectury](https://modrinth.com/mod/architectury-api) required!!!
+# FAQ
+## My Pokemon is not attacking!
+* Pokemon's level should be higher than minimum_attack_level(config/fightorflight.json5). Some modpacks(*Cobbleverse!!!*) will increase the value.
+* Pokemon won't attack if it's on your shoulder. However, the mounted Pokemon can attack.
+* do_pokemon_defend_owner needs to be set to true.
+* Pokemon will try to use the first move in its move slots to attack. It needs to be a physical/special move.
+* Some other config is related to this problem, too.
 # Introduction
 ## Major changes compared to the original version developed by Rufia:
 - **Unprovoked Attack Disabled** I personally don't like this feature because the Pokemon spawns anywhere and anytime.It's quite easy to get attacked when you are doing something. However,you are free to enable it in the config.
