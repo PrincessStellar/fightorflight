@@ -503,7 +503,7 @@ public class PokemonAttackEffect {
         double d = target.getX() - pokemonEntity.getX();
         double e = target.getY(0.5) - projectile.getY();
         double f = target.getZ() - pokemonEntity.getZ();
-        float velocity = 1.6f;
+        float velocity = 1.2f;
         projectile.accurateShoot(d, e, f, velocity, 0.1f);
     }
 

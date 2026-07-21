@@ -59,12 +59,13 @@ public class PokemonArrow extends AbstractPokemonProjectile {
     }
 
     public void tick() {
-        super.tick();
+        //super.tick();//Don't use it or the gravity will be applied twice.
         Vec3 vec3 = this.getDeltaMovement();
+        double mul = (180F / (float) Math.PI);
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
             double d = vec3.horizontalDistance();
-            this.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * 57.2957763671875));
-            this.setXRot((float) (Mth.atan2(vec3.y, d) * 57.2957763671875));
+            this.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * mul));
+            this.setXRot((float) (Mth.atan2(vec3.y, d) * mul));
             this.yRotO = this.getYRot();
             this.xRotO = this.getXRot();
         }
@@ -77,12 +78,12 @@ public class PokemonArrow extends AbstractPokemonProjectile {
         double k = this.getZ() + g;
         double l = vec3.horizontalDistance();
         if (this.noPhysics) {
-            this.setYRot((float) (Mth.atan2(-e, -g) * 57.2957763671875));
+            this.setYRot((float) (Mth.atan2(-e, -g) * mul));
         } else {
-            this.setYRot((float) (Mth.atan2(e, g) * 57.2957763671875));
+            this.setYRot((float) (Mth.atan2(e, g) * mul));
         }
 
-        this.setXRot((float) (Mth.atan2(f, l) * 57.2957763671875));
+        this.setXRot((float) (Mth.atan2(f, l) * mul));
         this.setXRot(lerpRotation(this.xRotO, this.getXRot()));
         this.setYRot(lerpRotation(this.yRotO, this.getYRot()));
         float m = 0.99F;
@@ -104,6 +105,9 @@ public class PokemonArrow extends AbstractPokemonProjectile {
 
         this.setPos(h, j, k);
         this.checkInsideBlocks();
+        if (shoudlCreateParticle()) {
+            makeParticle(2);
+        }
     }
 
     protected void onHitEntity(EntityHitResult result) {
