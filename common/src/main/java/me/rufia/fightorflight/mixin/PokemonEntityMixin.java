@@ -496,7 +496,7 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
         }
 
         int attackTime = getAttackTime();
-        if (attackTime > -1) {
+        if (attackTime > 0) {
             setAttackTime(attackTime - 1);
         }
         if (!level().isClientSide) {
@@ -650,30 +650,14 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
         setCurrentMove(move);
     }
 
-    @Inject(method = "dropAllDeathLoot", at = @At("TAIL"))
-    private void dropAllDeathLootInject(ServerLevel world, DamageSource source, CallbackInfo ci) {
-        if (HURT_BY_POKEMON_FOF.isEmpty()) {
-            return;
-        }
-        PokemonEntity self = (PokemonEntity) (Object) this;
-        if (CobblemonFightOrFlight.commonConfig().pokemon_share_yield) {
-            int pokemonCount = HURT_BY_POKEMON_FOF.size();
-            for (Pokemon pokemon : HURT_BY_POKEMON_FOF) {
-                if (pokemon.isFainted()) {
-                    continue;
-                }
-                pokemon.addExperience(new SidemodExperienceSource(CobblemonFightOrFlight.MODID), FOFExpCalculator.calculate(pokemon, self.getPokemon(), pokemonCount));
-                if (CobblemonFightOrFlight.commonConfig().can_gain_ev) {
-                    var map = FOFEVCalculator.calculate(pokemon, self.getPokemon());
-                    for (Map.Entry<Stat, Integer> entry : map.entrySet()) {
-                        EvSource evSource = new SidemodEvSource(CobblemonFightOrFlight.MODID, pokemon);
-                        pokemon.getEvs().add(entry.getKey(), entry.getValue(), evSource);
-                    }
-                }
+    @Unique
+    private void shareYield(PokemonEntity self) {
+        int pokemonCount = HURT_BY_POKEMON_FOF.size();
+        for (Pokemon pokemon : HURT_BY_POKEMON_FOF) {
+            if (pokemon.isFainted()) {
+                continue;
             }
-        } else {
-            Pokemon pokemon = LAST_HURT_BY_POKEMON_FOF;
-            pokemon.addExperience(new SidemodExperienceSource(CobblemonFightOrFlight.MODID), FOFExpCalculator.calculate(pokemon, self.getPokemon()));
+            pokemon.addExperience(new SidemodExperienceSource(CobblemonFightOrFlight.MODID), FOFExpCalculator.calculate(pokemon, self.getPokemon(), pokemonCount));
             if (CobblemonFightOrFlight.commonConfig().can_gain_ev) {
                 var map = FOFEVCalculator.calculate(pokemon, self.getPokemon());
                 for (Map.Entry<Stat, Integer> entry : map.entrySet()) {
@@ -681,6 +665,32 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
                     pokemon.getEvs().add(entry.getKey(), entry.getValue(), evSource);
                 }
             }
+        }
+    }
+
+    @Unique
+    private void lastTakeYield(PokemonEntity self) {
+        Pokemon pokemon = LAST_HURT_BY_POKEMON_FOF;
+        pokemon.addExperience(new SidemodExperienceSource(CobblemonFightOrFlight.MODID), FOFExpCalculator.calculate(pokemon, self.getPokemon()));
+        if (CobblemonFightOrFlight.commonConfig().can_gain_ev) {
+            var map = FOFEVCalculator.calculate(pokemon, self.getPokemon());
+            for (Map.Entry<Stat, Integer> entry : map.entrySet()) {
+                EvSource evSource = new SidemodEvSource(CobblemonFightOrFlight.MODID, pokemon);
+                pokemon.getEvs().add(entry.getKey(), entry.getValue(), evSource);
+            }
+        }
+    }
+
+    @Inject(method = "dropAllDeathLoot", at = @At("TAIL"))
+    private void dropAllDeathLootInject(ServerLevel world, DamageSource source, CallbackInfo ci) {
+        if (HURT_BY_POKEMON_FOF.isEmpty()) {
+            return;
+        }
+        PokemonEntity self = (PokemonEntity) (Object) this;
+        if (CobblemonFightOrFlight.commonConfig().pokemon_share_yield) {
+            shareYield(self);
+        } else {
+            lastTakeYield(self);
         }
     }
 }

@@ -214,7 +214,7 @@ public class PokemonUtils {
             return null;
         }
 
-        return isMeleeAttackMove(move) ? move : null;
+        return isRangeAttackMove(move) ? move : null;
     }
 
     public static Move getStatusMove(PokemonEntity pokemonEntity) {

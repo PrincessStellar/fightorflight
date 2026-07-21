@@ -545,7 +545,6 @@ public class PokemonAttackEffect {
                     applySFX(pokemonEntity.level(), move, pokemonEntity.blockPosition());
                     applyPostEffect(pokemonEntity, target, move, success);
                 }
-                //applyTypeEffect(pokemonEntity, target);
             } else if (b6) {
                 //Should not be processed here.
             } else if (b9) {
@@ -584,7 +583,7 @@ public class PokemonAttackEffect {
         RandomSource rand = pokemonEntity.level().random;
         int count = rand.nextIntBetweenInclusive(6, 8);
         double horizontal = 1 + pokemonEntity.getBbWidth() / 2;
-        float velocity = 0.8f;
+        float velocity = 0.5f;
 
         if (PokemonUtils.getTarget(pokemonEntity) instanceof LivingEntity target) {
             double x = target.getX() - pokemonEntity.getX();

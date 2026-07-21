@@ -63,9 +63,7 @@ public class FOFPokemonRangeTask extends Behavior<LivingEntity> {
                         if (!canSee) {
                             return;
                         }
-
                         performRangedAttack(pokemonEntity, target);
-
                     } else if (attackTime < 0) {
                         FOFPokemonAttackTask.refreshAttackTime(pokemonEntity, 10);
                     }
@@ -84,8 +82,8 @@ public class FOFPokemonRangeTask extends Behavior<LivingEntity> {
 
     protected void performRangedAttack(PokemonEntity pokemonEntity, LivingEntity target) {
         double d = pokemonEntity.distanceToSqr(target.getX(), target.getY(), target.getZ());
-        PokemonAttackEffect.pokemonPerformRangedAttack(pokemonEntity, target);
         FOFPokemonAttackTask.resetAttackTime(pokemonEntity, d);
+        PokemonAttackEffect.pokemonPerformRangedAttack(pokemonEntity, target);
         pokemonEntity.getBrain().setMemoryWithExpiry(MemoryModuleType.ATTACK_COOLING_DOWN, true, FOFPokemonAttackTask.getAttackTime(pokemonEntity));
     }
 }

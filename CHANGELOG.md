@@ -3,7 +3,10 @@
 * Pokemon can attack in peaceful difficulty now.
 ### Changes:
 * Slightly adjusted the projectile created for the special move that doesn't have special effect currently to make it more accurate.
-* Slightly lowered projectiles speed.
+* Lowered projectiles speed. It was too fast to notice. It's still fast but you might notice something flies away.
+### Bug fixes:
+* Fix the bug that moves needs 1 turn to recharge don't have a longer cooldown(I think it never worked so I guess no one should discover that this is a bug)
+* Fix the bug that some range attack move is not working correctly.
 ### TODO list:
 * Custom type effectiveness: Use a json file to give an entity specific weaknesses and resistances. For modpack creators & datapack creators to create more interactions with the mobs from the other mods.
 * Adjust the way the Pokemon uses move, maybe I will make the Pokemon stop for a moment to use the move.(Like in ZA) It might be added to the status moves first because the mobs from Minecraft can attack while moving, making the Pokemon totally dumb is not fun.
