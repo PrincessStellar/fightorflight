@@ -30,13 +30,13 @@ public class FOFPokemonMeleeTask {
                     LivingEntity target = context.get(attackTargetAccessor);
                     if (livingEntity instanceof PokemonEntity pokemonEntity) {
                         pokemonEntity.setTarget(target);
-                        int attackTime = FOFPokemonAttackTask.getAttackTime(pokemonEntity);
+                        int attackTime = PokemonAttackEffect.getAttackTime(pokemonEntity);
                         if (PokemonUtils.shouldMelee(pokemonEntity) && FOFPokemonAttackTask.sharedStartCondition(pokemonEntity)) {
                             tryQuickApproach(pokemonEntity, target);
                             if (canPerformAttack(pokemonEntity, target)) {
                                 if (attackTime <= 0) {
                                     lookTargetAccessor.set(new EntityTracker(target, true));
-                                    FOFPokemonAttackTask.resetAttackTime(pokemonEntity, 0);
+                                    PokemonAttackEffect.resetAttackTime(pokemonEntity, 0);
                                     pokemonEntity.swing(InteractionHand.MAIN_HAND);
                                     pokemonDoHurtTarget(pokemonEntity, target);
                                     ((PokemonInterface) pokemonEntity).setAttackTime(cooldownBetweenAttacks);
@@ -83,7 +83,7 @@ public class FOFPokemonMeleeTask {
     }
 
     protected static void tryQuickApproach(PokemonEntity pokemonEntity, LivingEntity target) {
-        if (target != null && FOFPokemonAttackTask.getAttackTime(pokemonEntity) == 0) {
+        if (target != null && PokemonAttackEffect.getAttackTime(pokemonEntity) == 0) {
             Move move = PokemonUtils.getMove(pokemonEntity);
             if (move != null) {
                 String moveName = move.getName();

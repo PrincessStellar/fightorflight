@@ -53,12 +53,12 @@ public class PokemonAreaEffectMagicRenderer extends EntityRenderer<PokemonAreaEf
             if (entity.getElementalType().equals("Electric")) {
                 poseStack.translate(0, -2, 0);
                 yScale = Mth.clampedLerp(0.2f, 1f, tick / 4);
-                poseStack.scale(1, yScale, 1);
+                poseStack.scale(1, yScale * yScale, 1);
                 model.renderBeam(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, colorCode);
             } else {
-                yScale = -Mth.clampedLerp(0.2f, 1f, tick / 4);
+                yScale = Mth.clampedLerp(0.2f, 1f, tick / 4);
                 poseStack.translate(0, 0.2, 0);
-                poseStack.scale(1, yScale, 1);
+                poseStack.scale(1, -yScale * yScale, 1);
                 model.renderBeam(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, colorCode);
                 VertexConsumer vertexConsumer1 = buffer.getBuffer(RenderType.entityTranslucentEmissive(ERUPTION_FIRE_TEXTURE_LOCATION));
                 model.renderBeam(poseStack, vertexConsumer1, packedLight, OverlayTexture.NO_OVERLAY, colorCode);

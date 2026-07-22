@@ -24,6 +24,8 @@ public class MiscMoveData extends MoveData {
             if (PokemonUtils.getTarget(pokemonEntity) != null) {
                 int originalAttackTime = ((PokemonInterface) pokemonEntity).getMaxAttackTime();
                 PokemonAttackEffect.refreshAttackTime(pokemonEntity, originalAttackTime * 2);
+                int newMoveDuration = ((PokemonInterface) pokemonEntity).getMoveDurationOriginal() * 2;
+                PokemonAttackEffect.refreshMoveDuration(pokemonEntity, newMoveDuration);
             }
         }
         if (Objects.equals("heal_per_50", getName())) {

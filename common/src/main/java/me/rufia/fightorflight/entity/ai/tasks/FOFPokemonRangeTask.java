@@ -1,8 +1,8 @@
 package me.rufia.fightorflight.entity.ai.tasks;
 
+import com.cobblemon.mod.common.api.moves.Move;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.google.common.collect.ImmutableMap;
-import me.rufia.fightorflight.PokemonInterface;
 import me.rufia.fightorflight.entity.PokemonAttackEffect;
 import me.rufia.fightorflight.utils.PokemonUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -51,21 +51,15 @@ public class FOFPokemonRangeTask extends Behavior<LivingEntity> {
             if (target != null) {
                 pokemonEntity.setTarget(target);
                 boolean canSee = pokemonEntity.getSensing().hasLineOfSight(target);
-                int attackTime = FOFPokemonAttackTask.getAttackTime(pokemonEntity);
+                int attackTime = PokemonAttackEffect.getAttackTime(pokemonEntity);
                 if (FOFPokemonAttackTask.sharedStartCondition(pokemonEntity)) {
-                    if (attackTime == 7 && (((PokemonInterface) pokemonEntity).usingSound())) {
-                        PokemonUtils.createSonicBoomParticle(pokemonEntity, target);
-                    }
-                    if ((attackTime + 1) % 5 == 0 && (((PokemonInterface) pokemonEntity).usingMagic())) {
-                        PokemonAttackEffect.makeMagicAttackParticle(pokemonEntity, target);
-                    }
                     if (attackTime == 0) {
                         if (!canSee) {
                             return;
                         }
-                        performRangedAttack(pokemonEntity, target);
+                        prepareRangeAttack(pokemonEntity, target);
                     } else if (attackTime < 0) {
-                        FOFPokemonAttackTask.refreshAttackTime(pokemonEntity, 10);
+                        PokemonAttackEffect.refreshAttackTime(pokemonEntity, 10);
                     }
                 }
             }
@@ -75,15 +69,17 @@ public class FOFPokemonRangeTask extends Behavior<LivingEntity> {
     protected boolean isWithinAttackRange(LivingEntity pokemon, LivingEntity target) {
         if (pokemon instanceof PokemonEntity pokemonEntity) {
             double d = pokemonEntity.distanceTo(target);
-            return d < PokemonUtils.getAttackRadius();
+            return d <= PokemonUtils.getAttackRadius();
         }
         return false;
     }
 
-    protected void performRangedAttack(PokemonEntity pokemonEntity, LivingEntity target) {
+    protected void prepareRangeAttack(PokemonEntity pokemonEntity, LivingEntity target) {
         double d = pokemonEntity.distanceToSqr(target.getX(), target.getY(), target.getZ());
-        FOFPokemonAttackTask.resetAttackTime(pokemonEntity, d);
-        PokemonAttackEffect.pokemonPerformRangedAttack(pokemonEntity, target);
-        pokemonEntity.getBrain().setMemoryWithExpiry(MemoryModuleType.ATTACK_COOLING_DOWN, true, FOFPokemonAttackTask.getAttackTime(pokemonEntity));
+        PokemonAttackEffect.resetAttackTime(pokemonEntity, d);
+        PokemonAttackEffect.resetMoveDuration(pokemonEntity, d);
+        Move move = PokemonUtils.getMove(pokemonEntity);
+        PokemonAttackEffect.applyBeforeUseEffect(pokemonEntity, target, move);
+        pokemonEntity.getBrain().setMemoryWithExpiry(MemoryModuleType.ATTACK_COOLING_DOWN, true, PokemonAttackEffect.getAttackTime(pokemonEntity));
     }
 }

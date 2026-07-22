@@ -225,7 +225,6 @@ public class FightOrFlightMoveConfigModel implements ConfigData {
             "mindblown",
             "mistyexplosion"
     };
-    //TODO
     @ConfigEntry.Category("Status moves(WIP)")
     @Comment("Enable the Pokemon to use the spikes.")
     public boolean enable_spikes = true;

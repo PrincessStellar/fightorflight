@@ -9,18 +9,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 
 public abstract class FOFPokemonAttackTask {
-    public static int getAttackTime(PokemonEntity pokemonEntity) {
-        return ((PokemonInterface) pokemonEntity).getAttackTime();
-    }
-
-    public static void resetAttackTime(PokemonEntity pokemonEntity, double dis) {
-        PokemonAttackEffect.resetAttackTime(pokemonEntity, dis);
-    }
-
-    public static void refreshAttackTime(PokemonEntity pokemonEntity, int ticks) {
-        PokemonAttackEffect.refreshAttackTime(pokemonEntity, ticks);
-    }
-
     public static boolean isTargetInBattle(PokemonEntity pokemonEntity) {
         if (getTarget(pokemonEntity) instanceof ServerPlayer targetAsPlayer) {
             return BattleRegistry.getBattleByParticipatingPlayer(targetAsPlayer) != null;

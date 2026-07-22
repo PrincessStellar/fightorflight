@@ -41,18 +41,19 @@ public class PokemonAttackEffect {
         return switch (nameLower) {
             case "fire" -> ParticleTypes.FLAME;
             case "ice" -> ParticleTypes.SNOWFLAKE;
-            case "poison" -> ParticleTypes.MYCELIUM;
+            case "poison" -> ParticleTypes.SCULK_CHARGE_POP;
             case "psychic" -> ParticleTypes.PORTAL;
             case "fairy" -> ParticleTypes.CHERRY_LEAVES;
-            case "fighting", "ground", "rock" -> ParticleTypes.POOF;
+            case "fighting" -> ParticleTypes.TRIAL_SPAWNER_DETECTED_PLAYER_OMINOUS;
+            case "ground", "rock" -> ParticleTypes.POOF;
             case "steel" -> ParticleTypes.WAX_OFF;
             case "ghost" -> ParticleTypes.SOUL;
-            case "dark" -> ParticleTypes.SMOKE;
+            case "dark" -> ParticleTypes.RAID_OMEN;
             case "electric" -> ParticleTypes.ELECTRIC_SPARK;
-            case "bug" -> ParticleTypes.SPORE_BLOSSOM_AIR;
-            case "grass" -> ParticleTypes.COMPOSTER;
+            case "bug" -> ParticleTypes.INFESTED;
+            case "grass" -> ParticleTypes.GLOW;
             case "dragon" -> ParticleTypes.DRAGON_BREATH;
-            case "flying" -> ParticleTypes.SWEEP_ATTACK;
+            case "flying" -> ParticleTypes.SMALL_GUST;
             case "water" -> ParticleTypes.SPLASH;
             case "normal" -> ParticleTypes.CRIT;
             default -> ParticleTypes.CRIT;
@@ -268,6 +269,9 @@ public class PokemonAttackEffect {
     }
 
     public static boolean canChangeMove(PokemonEntity pokemonEntity) {
+        if (((PokemonInterface) pokemonEntity).getMoveDuration() > 0) {
+            return false;
+        }
         ItemStack itemStack = PokemonUtils.getHeldItem(pokemonEntity);
         return !itemStack.is(CobblemonItems.CHOICE_BAND) && !itemStack.is(CobblemonItems.CHOICE_SCARF) && !itemStack.is(CobblemonItems.CHOICE_SPECS);
     }
@@ -408,6 +412,20 @@ public class PokemonAttackEffect {
             return;
         }
         PokemonUtils.makeParticle(particleAmount, entity, getParticleFromType(typeName));
+    }
+
+    public static void applyBeforeUseEffect(PokemonEntity pokemonEntity, LivingEntity hurtTarget, Move move) {
+        Level level = hurtTarget.level();
+        if (move == null || level.isClientSide) {
+            return;
+        }
+        if (CobblemonFightOrFlight.commonConfig().activate_move_effect && MoveData.moveData.containsKey(move.getName())) {
+            for (MoveData data : MoveData.moveData.get(move.getName())) {
+                if (data.isBeforeUse()) {
+                    data.invoke(pokemonEntity, hurtTarget);
+                }
+            }
+        }
     }
 
     public static void applyOnUseEffect(PokemonEntity pokemonEntity, LivingEntity hurtTarget, Move move) {
@@ -757,9 +775,13 @@ public class PokemonAttackEffect {
         return Math.min(Mth.lerp(((float) stat) / requiredStat, CobblemonFightOrFlight.moveConfig().min_AoE_radius, CobblemonFightOrFlight.moveConfig().max_AoE_radius), CobblemonFightOrFlight.moveConfig().max_AoE_radius);
     }
 
+    public static int getAttackTime(PokemonEntity pokemonEntity) {
+        return ((PokemonInterface) pokemonEntity).getAttackTime();
+    }
+
     public static int calculateAttackTime(PokemonEntity pokemonEntity, double distance) {
         if (pokemonEntity == null) {
-            return -1;
+            return 0;
         }
         boolean isMelee = PokemonUtils.shouldMelee(pokemonEntity);
         float attackSpeedModifier = Math.max(0.1f, 1 - pokemonEntity.getSpeed() / CobblemonFightOrFlight.commonConfig().speed_stat_limit);
@@ -779,6 +801,24 @@ public class PokemonAttackEffect {
     public static void resetAttackTime(PokemonEntity pokemonEntity, double distance) {
         int attackTime = calculateAttackTime(pokemonEntity, distance);
         refreshAttackTime(pokemonEntity, attackTime);
+    }
+
+    public static int calculateMoveDuration(PokemonEntity pokemonEntity, double distance) {
+        if (pokemonEntity == null) {
+            return 0;
+        }
+
+        return CobblemonFightOrFlight.commonConfig().base_move_duration;
+    }
+
+    public static void refreshMoveDuration(PokemonEntity pokemonEntity, int moveDuration) {
+        ((PokemonInterface) pokemonEntity).setMoveDuration(moveDuration);
+        ((PokemonInterface) pokemonEntity).setMoveDurationOriginal(moveDuration);
+    }
+
+    public static void resetMoveDuration(PokemonEntity pokemonEntity, double distance) {
+        int moveDuration = calculateMoveDuration(pokemonEntity, distance);
+        refreshMoveDuration(pokemonEntity, moveDuration);
     }
 
     public static boolean pokemonAttack(PokemonEntity pokemonEntity, Entity hurtTarget) {

@@ -101,7 +101,9 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
     private static final EntityDataAccessor<BlockPos> TARGET_BLOCK_POS;
 
     @Unique
-    private static final EntityDataAccessor<Integer> MOVE_DURATION;
+    private static final EntityDataAccessor<Integer> MOVE_DURATION;//Activate the move if the value equals to 0, then this value will be reduced to -1.
+    @Unique
+    private static final EntityDataAccessor<Integer> MOVE_DURATION_ORIGINAL;
 
     @Unique
     private final List<FOFMove> MOVES_FOF = new ArrayList<>();//This should only be accessed in the server side!
@@ -122,6 +124,8 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
         TARGET_BLOCK_POS = SynchedEntityData.defineId(PokemonEntityMixin.class, EntityDataSerializers.BLOCK_POS);
         ATTACK_MODE = SynchedEntityData.defineId(PokemonEntityMixin.class, EntityDataSerializers.INT);//0 means the pokemon can't attack, 1 for melee, 2 for range attack.
         MOVE_DURATION = SynchedEntityData.defineId(PokemonEntityMixin.class, EntityDataSerializers.INT);
+        MOVE_DURATION_ORIGINAL = SynchedEntityData.defineId(PokemonEntityMixin.class, EntityDataSerializers.INT);
+
     }
 
     @Unique
@@ -180,7 +184,8 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
         builder.define(COMMAND_DATA, "");
         builder.define(TARGET_BLOCK_POS, BlockPos.ZERO);
         builder.define(ATTACK_MODE, 0);
-        builder.define(MOVE_DURATION, 0);
+        builder.define(MOVE_DURATION, -1);
+        builder.define(MOVE_DURATION_ORIGINAL, -1);
     }
 
     @Inject(method = "saveWithoutId", at = @At("HEAD"))
@@ -346,6 +351,17 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
     }
 
     @Override
+    public int getMoveDurationOriginal() {
+        return entityData.get(MOVE_DURATION_ORIGINAL);
+    }
+
+    @Override
+    public void setMoveDurationOriginal(int duration) {
+        entityData.set(MOVE_DURATION_ORIGINAL, duration);
+    }
+
+
+    @Override
     public int getOwnerLastHurtTick() {
         return ownerLastHurtTick;
     }
@@ -494,11 +510,17 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
                 }
             }
         }
-
+        int moveDuration = getMoveDuration();
+        int moveDurationOriginal = getMoveDurationOriginal();
         int attackTime = getAttackTime();
-        if (attackTime > 0) {
-            setAttackTime(attackTime - 1);
+        if (moveDuration > -1) {
+            setMoveDuration(moveDuration - 1);
+        } else {
+            if (attackTime > 0) {
+                setAttackTime(attackTime - 1);
+            }
         }
+        useMoveProcess(moveDuration, moveDurationOriginal);
         if (!level().isClientSide) {
             int t = tickCount % 20;
             int sec = tickCount / 20;
@@ -523,6 +545,38 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
                 setAttackTime(300);
                 setMaxAttackTime(300);
             }
+        }
+    }
+
+    @Unique
+    private void useMoveProcess(int moveDuration, int moveDurationOriginal) {
+        if (moveDuration == -1 || moveDurationOriginal == -1) {
+            return;
+        }
+        PokemonEntity self = (PokemonEntity) (Object) this;
+        int chargeState = (int) (0.333 * moveDurationOriginal);
+        int attackState = (int) (0.667 * moveDurationOriginal);
+        int finishAttackState = (int) (0.75 * moveDurationOriginal);
+        int passedTime = moveDurationOriginal - moveDuration;
+        if (passedTime == chargeState) {
+            addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, moveDurationOriginal - chargeState, 2, false, false));
+        }
+        if (passedTime >= chargeState && passedTime <= attackState) {
+            Move move = PokemonUtils.getMove(self);
+            if (move != null) {
+                PokemonUtils.makeParticle(2, self, PokemonAttackEffect.getParticleFromType(move.getType()));
+            }
+        }
+        if(passedTime>=chargeState&&passedTime==attackState-5){
+            if(((PokemonInterface) self).usingSound()){
+                PokemonUtils.createSonicBoomParticle(self,getTarget());
+            }
+        }
+        if (passedTime == attackState) {
+            PokemonAttackEffect.pokemonPerformRangedAttack(self, getTarget());
+        }
+        if (passedTime == finishAttackState) {
+            PokemonUtils.makeParticle(6, self, ParticleTypes.SPIT);
         }
     }
 

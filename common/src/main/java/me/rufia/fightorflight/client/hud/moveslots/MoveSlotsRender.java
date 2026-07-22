@@ -56,6 +56,8 @@ public class MoveSlotsRender {
         ElementalType type = move.getType();
         int cooldown = ((PokemonInterface) entity).getAttackTime();
         int maxCooldown = ((PokemonInterface) entity).getMaxAttackTime();
+        int moveDuration = ((PokemonInterface) entity).getMoveDuration();
+        int moveDurationOriginal = ((PokemonInterface) entity).getMoveDurationOriginal();
         float cooldownPer = (float) cooldown / maxCooldown;
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -74,7 +76,7 @@ public class MoveSlotsRender {
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();
         poseStack.scale(TEXT_SIZE, TEXT_SIZE, 1);
-        graphics.drawCenteredString(font, move.getDisplayName(), (int) (x / TEXT_SIZE), (int) (y / TEXT_SIZE), 0xFFFFFF);
+        graphics.drawCenteredString(font, move.getDisplayName(), (int) (x / TEXT_SIZE), (int) (y / TEXT_SIZE), moveDuration > 0 ? 0xFFDD00 : 0xFFFFFF);
         poseStack.popPose();
     }
 }

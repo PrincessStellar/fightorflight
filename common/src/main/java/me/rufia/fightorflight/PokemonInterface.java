@@ -104,6 +104,13 @@ public interface PokemonInterface {
     default void setMoveDuration(int duration) {
     }
 
+    default int getMoveDurationOriginal() {
+        return -1;
+    }
+
+    default void setMoveDurationOriginal(int duration) {
+    }
+
     default LivingEntity getOwnerLastHurt() {
         return null;
     }

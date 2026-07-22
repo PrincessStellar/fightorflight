@@ -19,30 +19,33 @@ import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
 
-//This class hasn't been used!
 public class PokemonPostRenderer {
     private static final ResourceLocation BEAM_LOCATION = ResourceLocation.fromNamespaceAndPath(CobblemonFightOrFlight.MODID, "textures/entity/beam.png");
     private static final RenderType BEAM_RENDER_TYPE;
 
     private static Vec3 getPosition(LivingEntity livingEntity, double yOffset, float partialTick) {
-        double d = Mth.lerp((double) partialTick, livingEntity.xOld, livingEntity.getX());
-        double e = Mth.lerp((double) partialTick, livingEntity.yOld, livingEntity.getY()) + yOffset;
-        double f = Mth.lerp((double) partialTick, livingEntity.zOld, livingEntity.getZ());
+        double d = Mth.lerp(partialTick, livingEntity.xOld, livingEntity.getX());
+        double e = Mth.lerp(partialTick, livingEntity.yOld, livingEntity.getY()) + yOffset;
+        double f = Mth.lerp(partialTick, livingEntity.zOld, livingEntity.getZ());
         return new Vec3(d, e, f);
     }
 
     public static void postRender(PokemonEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         LivingEntity livingEntity = entity.getTarget();
-        int attackTime = ((PokemonInterface) entity).getAttackTime();
+        //int attackTime = ((PokemonInterface) entity).getAttackTime();
+        int moveDuration = ((PokemonInterface) entity).getMoveDuration();
+        int moveDurationOriginal = ((PokemonInterface) entity).getMoveDurationOriginal();
+        float per = (float) (moveDurationOriginal - moveDuration) / moveDurationOriginal;
+        boolean isCharging = 0.75 >= per && per >= 0.33;
         boolean enabled = ((PokemonInterface) entity).usingBeam() && !entity.isBattling();
         if (livingEntity != null) {
-            if (livingEntity.isAlive() && attackTime > 0 && enabled) {
+            if (livingEntity.isAlive() && isCharging && enabled) {
                 Move move = PokemonUtils.getMove(entity);
                 if (move == null) {
                     CobblemonFightOrFlight.LOGGER.info("Trying to use a null move");
                     return;
                 }
-                float g = 40 + partialTicks + attackTime;//entity.getClientSideAttackTime() + partialTicks;
+                float g = 40 + partialTicks + moveDuration;//entity.getClientSideAttackTime() + partialTicks;
                 Color color = PokemonAttackEffect.getColorFromType(move.getType().getName());
                 float h = g * 0.5F % 1.0F;
                 float i = entity.getEyeHeight();
