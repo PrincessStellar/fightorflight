@@ -39,7 +39,7 @@ public class PokemonAreaEffectTornadoRenderer extends EntityRenderer<AbstractPok
         poseStack.translate(0, -1.55, 0);
         VertexConsumer vertexConsumer = buffer.getBuffer(this.model.renderType(TEXTURE_LOCATION));
         Color color = PokemonAttackEffect.getColorFromType(entity.getElementalType());
-        int colorCode = FastColor.ARGB32.colorFromFloat(0.4F, (float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255);
+        int colorCode = FastColor.ARGB32.colorFromFloat(0.25F, (float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255);
         if (isWaiting) {
             model.renderPreEffect(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, colorCode);
         } else {

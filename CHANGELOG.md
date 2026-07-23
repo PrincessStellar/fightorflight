@@ -1,11 +1,11 @@
 # V0.11.0:
 ### New Features:
 * Pokemon can attack in peaceful difficulty now.
+* Adjust the way the range attack works, the Pokemon will gain slowness when trying to use range attack, charge for a short period of time and then attack.
+    * Pokemon can't change the move it's trying to use if it's charging.
+    * Moves that needs to charge 1 turn to use will have longer duration.
+    * It is designed to be finished in less than 1 second so it won't influence most players.
 ### Changes:
-* Adjust the way the range attack works, the Pokemon will gain slowness when trying to use range attack, charge for a short period of time and then attack. 
-  * Pokemon can't change the move it's trying to use if it's charging. 
-  * Moves that needs to charge 1 turn to use will have longer duration.
-  * It is designed to be finished in less than 1 second so it won't influence most players.
 * Changes some of the particle when using moves with specific types.
 * Slightly adjusted the projectile created for the special move that doesn't have special effect currently to make it more accurate.
 * Lowered projectiles speed. It was too fast to notice. It's still fast but you might notice something flies away.

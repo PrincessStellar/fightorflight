@@ -535,16 +535,9 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
         }
         PokemonEntity self = (PokemonEntity) (Object) this;
         if (self.getOwner() instanceof Player && !FOFHeldItemManager.canUse(self, CobblemonItems.ASSAULT_VEST)) {
-            Move move = PokemonUtils.getStatusMove(self);
-            if (move != null && CobblemonFightOrFlight.commonConfig().activate_move_effect && MoveData.moveData.containsKey(move.getName())) {
-                for (MoveData data : MoveData.moveData.get(move.getName())) {
-                    data.invoke(self, null);
-                }
-                PokemonUtils.makeParticle(10, self, ParticleTypes.HAPPY_VILLAGER);
-                PokemonUtils.sendAnimationPacket(self, "status");
-                setAttackTime(300);
-                setMaxAttackTime(300);
-            }
+            PokemonAttackEffect.refreshAttackTime(self, 300);
+            PokemonAttackEffect.resetMoveDuration(self, 0);
+            //PokemonAttackEffect.applyBeforeUseEffect(self, null, move);
         }
     }
 
@@ -567,13 +560,31 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
                 PokemonUtils.makeParticle(2, self, PokemonAttackEffect.getParticleFromType(move.getType()));
             }
         }
-        if(passedTime>=chargeState&&passedTime==attackState-5){
-            if(((PokemonInterface) self).usingSound()){
-                PokemonUtils.createSonicBoomParticle(self,getTarget());
+        if (passedTime >= chargeState && passedTime == attackState - 5) {
+            if (((PokemonInterface) self).usingSound()) {
+                PokemonUtils.createSonicBoomParticle(self, getTarget());
             }
         }
         if (passedTime == attackState) {
-            PokemonAttackEffect.pokemonPerformRangedAttack(self, getTarget());
+            int attackMode = getAttackMode();
+            switch (attackMode) {
+                case 0: {
+                    Move move = PokemonUtils.getStatusMove(self);
+                    if (move != null && CobblemonFightOrFlight.commonConfig().activate_move_effect && MoveData.moveData.containsKey(move.getName())) {
+                        for (MoveData data : MoveData.moveData.get(move.getName())) {
+                            data.invoke(self, null);
+                        }
+                        PokemonUtils.makeParticle(10, self, ParticleTypes.HAPPY_VILLAGER);
+                        PokemonUtils.sendAnimationPacket(self, "status");
+                    }
+                    break;
+                }
+                case 2:
+                    PokemonAttackEffect.pokemonPerformRangedAttack(self, getTarget());
+                    break;
+                default:
+                    break;
+            }
         }
         if (passedTime == finishAttackState) {
             PokemonUtils.makeParticle(6, self, ParticleTypes.SPIT);

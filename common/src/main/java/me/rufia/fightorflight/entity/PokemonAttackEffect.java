@@ -415,7 +415,7 @@ public class PokemonAttackEffect {
     }
 
     public static void applyBeforeUseEffect(PokemonEntity pokemonEntity, LivingEntity hurtTarget, Move move) {
-        Level level = hurtTarget.level();
+        Level level = pokemonEntity.level();
         if (move == null || level.isClientSide) {
             return;
         }
@@ -429,7 +429,7 @@ public class PokemonAttackEffect {
     }
 
     public static void applyOnUseEffect(PokemonEntity pokemonEntity, LivingEntity hurtTarget, Move move) {
-        Level level = hurtTarget.level();
+        Level level = pokemonEntity.level();
         if (move == null || level.isClientSide) {
             return;
         }
@@ -443,7 +443,7 @@ public class PokemonAttackEffect {
     }
 
     public static void applyPostEffect(PokemonEntity pokemonEntity, LivingEntity hurtTarget, Move move, boolean targetIsHurt) {
-        Level level = hurtTarget.level();
+        Level level = pokemonEntity.level();
         if (move == null || level.isClientSide) {
             return;
         }
