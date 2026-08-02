@@ -21,12 +21,7 @@ public class MiscMoveData extends MoveData {
             return;
         }
         if (Objects.equals("recharge_1_turn", getName()) || Objects.equals("charge_1_turn", getName())) {
-            if (PokemonUtils.getTarget(pokemonEntity) != null) {
-                int originalAttackTime = ((PokemonInterface) pokemonEntity).getMaxAttackTime();
-                PokemonAttackEffect.refreshAttackTime(pokemonEntity, originalAttackTime * 2);
-                int newMoveDuration = ((PokemonInterface) pokemonEntity).getMoveDurationOriginal() * 2;
-                PokemonAttackEffect.refreshMoveDuration(pokemonEntity, newMoveDuration);
-            }
+            PokemonAttackEffect.doublePokemonAttackTime(pokemonEntity);
         }
         if (Objects.equals("heal_per_50", getName())) {
             finalTarget.heal(0.5f * finalTarget.getMaxHealth());

@@ -206,6 +206,7 @@ public abstract class PokemonEntityMixin extends TamableAnimal implements Pokemo
         hashSet.add(FOFSensors.POKEMON_CAUGHT_BY);
         hashSet.add(FOFSensors.POKESTAFF_ATTACK_TARGET);
         hashSet.add(FOFSensors.POKESTAFF_WALK_TARGET);
+        hashSet.add(FOFSensors.POKESTAFF_AUTO_BATTLE);
         hashSet.add(SensorType.HURT_BY);
         return Set.copyOf(hashSet);
     }

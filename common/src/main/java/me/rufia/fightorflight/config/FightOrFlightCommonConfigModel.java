@@ -221,7 +221,7 @@ public class FightOrFlightCommonConfigModel implements ConfigData {
     @Comment("Minimum damage wild pokemon would do with ranged attacks")
     public float minimum_ranged_attack_damage = 1.0f;
     @Comment("The basic duration of a move. In ticks")
-    public int base_move_duration=20;
+    public int base_move_duration = 20;
     @Comment("Maximum damage wild pokemon would do with ranged attacks")
     public float maximum_ranged_attack_damage = 50.0f;
     @Comment("Minimum damage multiplier player-owned pokemon would do with ranged attacks")
@@ -279,6 +279,12 @@ public class FightOrFlightCommonConfigModel implements ConfigData {
     public boolean stay_after_move_command = true;
     @Comment("If the player need to hold a Poke Staff to use the command keybind")
     public boolean should_check_poke_staff = true;
+    @Comment("If the Auto Battle command should be enabled")
+    public boolean enable_auto_battle_command = true;
+    @Comment("The friendship requirement for your Pokemon to obey the Auto Battle command. If this value is lower than zero, the friendship value won't influence the Pokemon.")
+    public int auto_battle_friendship_requirement = 100;
+    @Comment("If this is set to true, Pokemon with Auto Battle command won't attack Pokemon with a higher level.")
+    public boolean auto_battle_weaker_pokemon_only = true;
     @ConfigEntry.Category("Held item")
     @Comment("If the pokemon can use held item(This config has the highest priority)")
     public boolean can_use_held_item = true;

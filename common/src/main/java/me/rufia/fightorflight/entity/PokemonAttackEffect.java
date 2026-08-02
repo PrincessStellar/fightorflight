@@ -455,6 +455,7 @@ public class PokemonAttackEffect {
         boolean b4 = Arrays.stream(CobblemonFightOrFlight.moveConfig().hp_draining_moves_50).toList().contains(moveName);
         boolean b5 = Arrays.stream(CobblemonFightOrFlight.moveConfig().hp_draining_moves_75).toList().contains(moveName);
         boolean b6 = FOFHeldItemManager.canUse(pokemonEntity, CobblemonItems.LIFE_ORB);
+        boolean b7 = Arrays.stream(CobblemonFightOrFlight.moveConfig().extra_recharging_moves).toList().contains(moveName);
         float dmg = calculatePokemonDamage(pokemonEntity, hurtTarget, move);
         if (b1) {
             pokemonRecallWithAnimation(pokemonEntity);
@@ -479,6 +480,10 @@ public class PokemonAttackEffect {
             }
         }
 
+        if (b7) {
+            doublePokemonAttackTime(pokemonEntity);
+        }
+
         if (CobblemonFightOrFlight.commonConfig().activate_type_effect) {
             applyTypeEffect(pokemonEntity, hurtTarget, move.getType().getName());
         }
@@ -490,6 +495,7 @@ public class PokemonAttackEffect {
                 }
             }
         }
+
 
         if (!PokemonUtils.isSheerForce(pokemonEntity)) {
             if (FOFHeldItemManager.canUse(pokemonEntity, CobblemonItems.SHELL_BELL)) {
@@ -820,6 +826,16 @@ public class PokemonAttackEffect {
         int moveDuration = calculateMoveDuration(pokemonEntity, distance);
         refreshMoveDuration(pokemonEntity, moveDuration);
     }
+
+    public static void doublePokemonAttackTime(PokemonEntity pokemonEntity) {
+        if (PokemonUtils.getTarget(pokemonEntity) != null) {
+            int originalAttackTime = ((PokemonInterface) pokemonEntity).getMaxAttackTime();
+            refreshAttackTime(pokemonEntity, originalAttackTime * 2);
+            int newMoveDuration = ((PokemonInterface) pokemonEntity).getMoveDurationOriginal() * 2;
+            refreshMoveDuration(pokemonEntity, newMoveDuration);
+        }
+    }
+
 
     public static boolean pokemonAttack(PokemonEntity pokemonEntity, Entity hurtTarget) {
         Pokemon pokemon = pokemonEntity.getPokemon();

@@ -482,7 +482,7 @@ public class PokemonUtils {
         }
         PokeStaffComponent.CMDMODE cmd = getCommandMode(pokemon);
         switch (cmd) {
-            case ATTACK, ATTACK_POSITION, MOVE_ATTACK, STAY, MOVE -> {
+            case ATTACK, ATTACK_POSITION, MOVE_ATTACK, STAY, MOVE, AUTO_BATTLE -> {
                 return true;
             }
             default -> {

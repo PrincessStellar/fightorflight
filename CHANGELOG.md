@@ -4,15 +4,22 @@
 * Adjust the way the range attack works, the Pokemon will gain slowness when trying to use range attack, charge for a short period of time and then attack.
     * Pokemon can't change the move it's trying to use if it's charging.
     * Moves that needs to charge 1 turn to use will have longer duration.
-    * It is designed to be finished in less than 1 second so it won't influence most players.
+    * It is designed to be finished in 1 second so it won't influence most players.
 ### Changes:
 * Changes some of the particle when using moves with specific types.
 * Slightly adjusted the projectile created for the special move that doesn't have special effect currently to make it more accurate.
-* Lowered projectiles speed. It was too fast to notice. It's still fast but you might notice something flies away.
+* Lowered projectiles speed. It was too fast to notice. It's still fast now, but you might notice something flies away.
 ### Bug fixes:
 * Fix the bug that moves needs 1 turn to recharge/charge don't have a longer cooldown(I think it never worked so I guess no one should discover that this is a bug.)
 * Fix the bug that some range attack move is not working correctly.
+### New Config:
+* enable_auto_battle_command: If the Auto Battle command should be enabled.
+* auto_battle_friendship_requirement: The friendship requirement for your Pokemon to obey the Auto Battle command. The default value is 100
+* auto_battle_weaker_pokemon_only: If this is set to true, If this is set to true, Pokemon with Auto Battle command won't attack Pokemon with a higher level.
+* base_move_duration: The basic duration of a move. In ticks.
+* extra_recharging_moves: Moves that doesn't require the Pokemon to recharge/charge 1 turn, but you want to extend its recharging time for balancing.
 ### TODO list:
+* A more detailed information if the player failed to change the Pokemon's move.
 * Custom type effectiveness: Use a json file to give an entity specific weaknesses and resistances. For modpack creators & datapack creators to create more interactions with the mobs from the other mods.
 
 # V0.10.9:

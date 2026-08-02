@@ -13,7 +13,7 @@ public record PokeStaffComponent(String mode, int moveSlot, String cmdmode) {
     }
 
     public enum CMDMODE {
-        MOVE_ATTACK, MOVE, STAY, ATTACK, ATTACK_POSITION, NOCMD, CLEAR
+        MOVE_ATTACK, MOVE, STAY, ATTACK, ATTACK_POSITION, AUTO_BATTLE, NOCMD, CLEAR
     }
 
     public static final Codec<PokeStaffComponent> CODEC;

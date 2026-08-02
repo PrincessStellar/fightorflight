@@ -98,6 +98,8 @@ public class FightOrFlightMoveConfigModel implements ConfigData {
             "solarbeam",
             "moongeistbeam",
             "aurorabeam",
+            "steelbeam",
+            "meteorbeam",
 
             "waterpulse",
             "darkpulse",
@@ -114,11 +116,18 @@ public class FightOrFlightMoveConfigModel implements ConfigData {
             "electroshot",
             "photongeyser",
             "flashcannon",
+            "fleurcannon",
 
             "flamethrower",
             "mysticalfire",
             "oblivionwing",
             "snipeshot"
+    };
+    @Comment("Moves that doesn't require the Pokemon to recharge/charge 1 turn, but you want to extend its recharging time for balancing. Moves that needs to recharge 1 turn have built-in longer recharging time and can't be disabled currently.")
+    public String[] extra_recharging_moves={
+            "hydropump",
+            "fleurcannon",
+            "zapcannon"
     };
     @Comment("Moves that hurt a target without any projectiles or blast.(The AOE moves will be implemented in another way)")
     public String[] magic_attack_moves = {

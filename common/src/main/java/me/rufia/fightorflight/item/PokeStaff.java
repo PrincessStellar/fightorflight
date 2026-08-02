@@ -50,7 +50,7 @@ public class PokeStaff extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if(!CobblemonFightOrFlight.commonConfig().can_use_poke_staff){
+        if (!CobblemonFightOrFlight.commonConfig().can_use_poke_staff) {
             return InteractionResultHolder.pass(player.getItemInHand(usedHand));
         }
         ItemStack stack = player.getItemInHand(usedHand);
@@ -186,7 +186,8 @@ public class PokeStaff extends Item {
             case MOVE -> cmd = PokeStaffComponent.CMDMODE.STAY.name();
             case STAY -> cmd = PokeStaffComponent.CMDMODE.ATTACK.name();
             case ATTACK -> cmd = PokeStaffComponent.CMDMODE.ATTACK_POSITION.name();
-            case ATTACK_POSITION -> cmd = PokeStaffComponent.CMDMODE.NOCMD.name();
+            case ATTACK_POSITION -> cmd = PokeStaffComponent.CMDMODE.AUTO_BATTLE.name();
+            case AUTO_BATTLE -> cmd = PokeStaffComponent.CMDMODE.NOCMD.name();
             case NOCMD -> cmd = PokeStaffComponent.CMDMODE.CLEAR.name();
             case CLEAR -> cmd = PokeStaffComponent.CMDMODE.MOVE_ATTACK.name();
             default -> cmd = PokeStaffComponent.CMDMODE.NOCMD.name();
@@ -203,6 +204,7 @@ public class PokeStaff extends Item {
             case ATTACK -> component = Component.translatable("item.fightorflight.pokestaff.command.attack_target");
             case ATTACK_POSITION ->
                     component = Component.translatable("item.fightorflight.pokestaff.command.attack_position");
+            case AUTO_BATTLE -> component = Component.translatable("item.fightorflight.pokestaff.command.auto_battle");
             case CLEAR -> component = Component.translatable("item.fightorflight.pokestaff.command.clear_cmd");
             default -> component = Component.translatable("item.fightorflight.pokestaff.command.no_cmd");
         }
